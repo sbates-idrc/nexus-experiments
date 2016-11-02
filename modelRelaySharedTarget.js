@@ -31,12 +31,27 @@ fluid.promise.sequence([
         });
     },
     function () {
+        return gpii.constructNexusPeer(nexusHost, nexusPort, "nexus.componentC", {
+            type: "fluid.modelComponent",
+            model: {
+                valueC: 10
+            }
+        });
+    },
+    function () {
         return gpii.constructNexusPeer(nexusHost, nexusPort, "nexus.wiringComponent", {
             type: "fluid.modelComponent",
             modelRelay: [
                 {
                     source: "{componentA}.model.valueA",
-                    target: "{componentB}.model.valueB",
+                    target: "{componentC}.model.valueC",
+                    singleTransform: {
+                        type: "fluid.transforms.identity"
+                    }
+                },
+                {
+                    source: "{componentB}.model.valueB",
+                    target: "{componentC}.model.valueC",
                     singleTransform: {
                         type: "fluid.transforms.identity"
                     }
