@@ -2,7 +2,8 @@
     "name": "gpii-nexus-experiments",
     "dependencies": {
         "infusion": "2.0.0-dev.20160309T145652Z.9f515ec",
-        "gpii-nexus-client": "simonbates/nexus-client"
+        "gpii-nexus-client": "simonbates/nexus-client",
+        "midi": "0.9.5"
     },
     "private": true
 }
