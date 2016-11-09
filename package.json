@@ -2,6 +2,7 @@
     "name": "gpii-nexus-experiments",
     "dependencies": {
         "infusion": "2.0.0-dev.20160309T145652Z.9f515ec",
+        "flocking": "simonbates/Flocking#8f3674c5cc592aa14e1002734a504fd24ce77b75",
         "gpii-nexus-client": "simonbates/nexus-client",
         "midi": "0.9.5"
     },
