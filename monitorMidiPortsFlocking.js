@@ -15,14 +15,25 @@ fluid.defaults("gpii.nexus.midiPortMonitor", {
     },
     invokers: {
         "startMonitoring": {
-            funcName: "gpii.nexus.midiPortMonitor.doMonitor",
-            args: ["{that}", "{midi}"]
+            funcName: "gpii.nexus.midiPortMonitor.pollMidi",
+            args: ["{midi}"]
         }
+    },
+    events: {
+        midiPortPollDone: null,
     },
     listeners: {
         "{midi}.events.onPortsAvailable": {
             listener: "gpii.nexus.midiPortMonitor.updatePolledPorts",
-            args: ["{that}", "{arguments}.0"] // ports
+            args: [
+                "{that}",
+                "{arguments}.0", // ports
+                "{that}.events.midiPortPollDone"
+            ]
+        },
+        "midiPortPollDone": {
+            listener: "gpii.nexus.midiPortMonitor.schedulePoll",
+            args: ["{that}"]
         }
     },
     modelListeners: {
@@ -33,19 +44,23 @@ fluid.defaults("gpii.nexus.midiPortMonitor", {
     }
 });
 
-gpii.nexus.midiPortMonitor.doMonitor = function (that, midi) {
+gpii.nexus.midiPortMonitor.pollMidi = function (midi) {
     midi.refreshPorts();
+};
+
+gpii.nexus.midiPortMonitor.schedulePoll = function (that) {
     setTimeout(function () {
-        gpii.nexus.midiPortMonitor.doMonitor(that, midi);
+        gpii.nexus.midiPortMonitor.pollMidi(that.midi);
     }, that.model.pollMs);
 };
 
-gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts) {
+gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts, doneEvent) {
     var polledInputPorts = [];
     fluid.each(polledPorts.inputs, function (port) {
         polledInputPorts[port.portNum] = port.name;
     });
     that.applier.change("inputPorts", polledInputPorts);
+    doneEvent.fire();
 };
 
 gpii.nexus.midiPortMonitor.listInputPorts = function (inputPorts) {
