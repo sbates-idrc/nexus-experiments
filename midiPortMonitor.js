@@ -35,12 +35,6 @@ fluid.defaults("gpii.nexus.midiPortMonitor", {
             listener: "gpii.nexus.midiPortMonitor.schedulePoll",
             args: ["{that}"]
         }
-    },
-    modelListeners: {
-        inputPorts: {
-            listener: "gpii.nexus.midiPortMonitor.listInputPorts",
-            args: ["{that}.model.inputPorts"]
-        }
     }
 });
 
@@ -62,14 +56,3 @@ gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts, done
     that.applier.change("inputPorts", polledInputPorts);
     doneEvent.fire();
 };
-
-gpii.nexus.midiPortMonitor.listInputPorts = function (inputPorts) {
-    console.log("Number of input ports: %d", inputPorts.length);
-    for (var i = 0; i < inputPorts.length; i++) {
-        console.log("%d: %s", i, inputPorts[i]);
-    }
-}
-
-var monitor = gpii.nexus.midiPortMonitor();
-
-monitor.startMonitoring();
