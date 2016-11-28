@@ -6,7 +6,7 @@ fluid.defaults("gpii.nexus.midiPortMonitor", {
     gradeNames: "fluid.modelComponent",
     model: {
         pollMs: 1000,
-        inputPorts: []
+        inputPortNames: []
     },
     components: {
         midi: {
@@ -49,10 +49,10 @@ gpii.nexus.midiPortMonitor.schedulePoll = function (that) {
 };
 
 gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts, doneEvent) {
-    var polledInputPorts = [];
+    var polledInputPortNames = [];
     fluid.each(polledPorts.inputs, function (port) {
-        polledInputPorts[port.portNum] = port.name;
+        polledInputPortNames.push(port.name);
     });
-    that.applier.change("inputPorts", polledInputPorts);
+    that.applier.change("inputPortNames", polledInputPortNames);
     doneEvent.fire();
 };

@@ -14,18 +14,18 @@ fluid.defaults("gpii.nexus.watchMidiPorts", {
         startMonitoring: "{midiMonitor}.startMonitoring()"
     },
     modelListeners: {
-        "{midiMonitor}.model.inputPorts": {
+        "{midiMonitor}.model.inputPortNames": {
             listener: "gpii.nexus.watchMidiPorts.listInputPorts",
-            args: ["{midiMonitor}.model.inputPorts"]
+            args: ["{midiMonitor}.model.inputPortNames"]
         }
     }
 });
 
-gpii.nexus.watchMidiPorts.listInputPorts = function (inputPorts) {
-    console.log("Number of input ports: %d", inputPorts.length);
-    for (var i = 0; i < inputPorts.length; i++) {
-        console.log("%d: %s", i, inputPorts[i]);
-    }
+gpii.nexus.watchMidiPorts.listInputPorts = function (inputPortNames) {
+    console.log("Number of input ports: %d", inputPortNames.length);
+    fluid.each(inputPortNames, function (portName) {
+        console.log(portName);
+    });
 }
 
 var watcher = gpii.nexus.watchMidiPorts();
