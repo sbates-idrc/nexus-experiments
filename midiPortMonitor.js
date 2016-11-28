@@ -14,9 +14,13 @@ fluid.defaults("gpii.nexus.midiPortMonitor", {
         }
     },
     invokers: {
-        "startMonitoring": {
+        startMonitoring: {
             funcName: "gpii.nexus.midiPortMonitor.pollMidi",
             args: ["{midi}"]
+        },
+        getInputPort: {
+            funcName: "gpii.nexus.midiPortMonitor.getInputPort",
+            args: ["{midi}", "{arguments}.0"] // port name
         }
     },
     events: {
@@ -55,4 +59,10 @@ gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts, done
     });
     that.applier.change("inputPortNames", polledInputPortNames);
     doneEvent.fire();
+};
+
+gpii.nexus.midiPortMonitor.getInputPort = function (midi, portName) {
+    return fluid.find(midi.ports.inputs, function (port) {
+        return (port.name === portName ? port : undefined);
+    });
 };

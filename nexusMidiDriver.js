@@ -1,4 +1,5 @@
 var fluid = require("infusion"),
+    flock = fluid.require("flocking"),
     gpii = fluid.registerNamespace("gpii");
 
 require("./midiPortMonitor.js");
@@ -13,20 +14,43 @@ fluid.defaults("gpii.nexus.midiDriver", {
         }
     },
     invokers: {
-        start: "{midiMonitor}.startMonitoring()"
+        start: "{midiMonitor}.startMonitoring()",
+        getMidiInputPort: "{midiMonitor}.getInputPort"
     },
     modelListeners: {
         "{midiMonitor}.model.inputPortNames": {
-            listener: "gpii.nexus.midiDriver.logChange",
-            args: ["{change}.value", "{change}.oldValue"]
+            listener: "gpii.nexus.midiDriver.onMidiInputPortsChanged",
+            args: ["{that}", "{change}.value", "{change}.oldValue"]
         }
     }
 });
 
-gpii.nexus.midiDriver.logChange = function (inputPortNames, oldInputPortNames) {
+gpii.nexus.midiDriver.onMidiInputPortsChanged = function (that, inputPortNames, oldInputPortNames) {
     var diff = gpii.nexus.midiDriver.diffArrays(oldInputPortNames, inputPortNames);
     fluid.each(diff.added, function (portName) {
-        console.log("Added MIDI port: %s", portName);
+        // TODO: Better solution for this ALSA workaround
+        if (portName && !portName.startsWith("Midi Through")) {
+            console.log("Added MIDI port: %s", portName);
+            // Open the newly added port
+            var port = that.getMidiInputPort(portName);
+            var connection = flock.midi.connection({
+                ports: {
+                    input: port.portNum
+                },
+                openImmediately: true,
+                listeners: {
+                    "note.log": {
+                        func: function () {
+                            fluid.log("MIDI NOTE");
+                        }
+                    }
+                }
+            });
+            //console.log(JSON.stringify(connection, null, 4));
+            // TODO: Open MIDI port and register event listener
+            // TODO: Construct a Nexus peer
+            // TODO: Send changes to Nexus peer
+        }
     });
     fluid.each(diff.removed, function (portName) {
         console.log("Removed MIDI port: %s", portName);
