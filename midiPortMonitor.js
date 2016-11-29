@@ -5,6 +5,7 @@ var fluid = require("infusion"),
 fluid.defaults("gpii.nexus.midiPortMonitor", {
     gradeNames: "fluid.modelComponent",
     model: {
+        enablePolling: true,
         pollMs: 1000,
         inputPortNames: []
     },
@@ -47,9 +48,11 @@ gpii.nexus.midiPortMonitor.pollMidi = function (midi) {
 };
 
 gpii.nexus.midiPortMonitor.schedulePoll = function (that) {
-    setTimeout(function () {
-        gpii.nexus.midiPortMonitor.pollMidi(that.midi);
-    }, that.model.pollMs);
+    if (that.model.enablePolling) {
+        setTimeout(function () {
+            gpii.nexus.midiPortMonitor.pollMidi(that.midi);
+        }, that.model.pollMs);
+    }
 };
 
 gpii.nexus.midiPortMonitor.updatePolledPorts = function (that, polledPorts, doneEvent) {

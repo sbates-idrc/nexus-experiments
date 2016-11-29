@@ -6,11 +6,19 @@ require("./midiPortMonitor.js");
 
 // TODO: Rework the port monitoring and port opening code when move to flocking-midi
 
+// TODO: Polling is disabled as it causes a seg fault on ALSA
+// I won't spend too much time on this as I will be moving to flocking-midi soon
+
 fluid.defaults("gpii.nexus.midiDriver", {
     gradeNames: "fluid.modelComponent",
     components: {
         midiMonitor: {
-            type: "gpii.nexus.midiPortMonitor"
+            type: "gpii.nexus.midiPortMonitor",
+            options: {
+                model: {
+                    enablePolling: false
+                }
+            }
         }
     },
     invokers: {
