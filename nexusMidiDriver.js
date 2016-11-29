@@ -32,16 +32,18 @@ gpii.nexus.midiDriver.onMidiInputPortsChanged = function (that, inputPortNames, 
         if (portName && !portName.startsWith("Midi Through")) {
             console.log("Added MIDI port: %s", portName);
             // Open the newly added port
-            var port = that.getMidiInputPort(portName);
+            //var port = that.getMidiInputPort(portName);
             var connection = flock.midi.connection({
                 ports: {
-                    input: port.portNum
+                    input: {
+                        name: portName
+                    }
                 },
                 openImmediately: true,
                 listeners: {
-                    "note.log": {
+                    "noteOn.log": {
                         func: function () {
-                            fluid.log("MIDI NOTE");
+                            console.log("MIDI NOTE");
                         }
                     }
                 }
