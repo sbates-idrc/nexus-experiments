@@ -1,3 +1,7 @@
+// This file is an attempt to reproduce a seg fault that I was seeing on ALSA.
+// I have been unable to reproduce the issue and this program does not seg
+// fault.
+
 var midi = require("midi");
 
 listPorts = function (midiInput) {
