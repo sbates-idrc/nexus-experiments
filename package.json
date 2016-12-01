@@ -1,10 +1,11 @@
 {
     "name": "gpii-nexus-experiments",
     "dependencies": {
-        "infusion": "2.0.0-dev.20160309T145652Z.9f515ec",
-        "flocking": "simonbates/Flocking#78a81eb67fd3733b143aada4431baf3a21cdb0e7",
+        "bergson": "0.12.3",
+        "infusion": "amb26/infusion#FLUID-5585",
+        "flocking-midi": "simonbates/flocking-midi#gh-1-experiments",
         "gpii-nexus-client": "simonbates/nexus-client",
-        "midi": "simonbates/node-midi#f00909dc1ba82e33fd86d5e52ebd092cab866744"
+        "midi": "colinbdclark/node-midi#hhromic-pr-67-with-simonbates-release-rtmidi"
     },
     "private": true
 }
