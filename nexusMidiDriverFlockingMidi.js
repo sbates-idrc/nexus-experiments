@@ -29,7 +29,21 @@ gpii.nexus.midiDriver.onPortsChanged = function (portsModel, oldPortsModel) {
     fluid.each(diff.added, function (port) {
         console.log("Added port: %s", port.id);
         flock.midi.connection({
-            portName: port.name
+            portName: port.name,
+            listeners: {
+                "noteOn.log": {
+                    func: function (message) {
+                        console.log("NOTE ON");
+                        console.log(JSON.stringify(message, null, 4));
+                    }
+                },
+                "noteOff.log": {
+                    func: function (message) {
+                        console.log("NOTE OFF");
+                        console.log(JSON.stringify(message, null, 4));
+                    }
+                }
+            }
         });
     });
     fluid.each(diff.removed, function (port) {
