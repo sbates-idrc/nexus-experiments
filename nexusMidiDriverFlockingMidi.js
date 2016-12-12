@@ -25,6 +25,7 @@ fluid.defaults("gpii.nexus.midiDriver", {
 });
 
 gpii.nexus.midiDriver.onPortsChanged = function (portsModel, oldPortsModel) {
+    console.log("PORTS CHANGED");
     var diff = gpii.nexus.midiDriver.diffPorts(portsModel, oldPortsModel);
     fluid.each(diff.added, function (port) {
         console.log("Added port: %s", port.id);
@@ -40,6 +41,12 @@ gpii.nexus.midiDriver.onPortsChanged = function (portsModel, oldPortsModel) {
                 "noteOff.log": {
                     func: function (message) {
                         console.log("NOTE OFF");
+                        console.log(JSON.stringify(message, null, 4));
+                    }
+                },
+                "control.log": {
+                    func: function (message) {
+                        console.log("CONTROL");
                         console.log(JSON.stringify(message, null, 4));
                     }
                 }
