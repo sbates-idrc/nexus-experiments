@@ -25,9 +25,9 @@ fluid.defaults("gpii.nexus.experiments.gradeB", {
     }
 });
 
-// Recipe relay grade
+// Recipe grade
 
-fluid.defaults("gpii.nexus.experiments.recipeA.relay", {
+fluid.defaults("gpii.nexus.experiments.recipeA", {
     gradeNames: "fluid.modelComponent",
     modelRelay: [
         {
@@ -79,7 +79,7 @@ fluid.construct("container.componentB3", {
 
 // Make some recipe instances
 
-gpii.nexus.experiments.constructRecipe = function (path, relayOptions, components, instantiator) {
+gpii.nexus.experiments.constructRecipe = function (path, recipeOptions, components, instantiator) {
     instantiator = instantiator || fluid.globalInstantiator;
 
     fluid.construct(path, {
@@ -94,13 +94,13 @@ gpii.nexus.experiments.constructRecipe = function (path, relayOptions, component
             false);
     });
 
-    fluid.construct(path + ".relay", relayOptions, instantiator);
+    fluid.construct(path + ".recipe", recipeOptions, instantiator);
 };
 
 gpii.nexus.experiments.constructRecipe(
     "container.recipeA1",
     {
-        type: "gpii.nexus.experiments.recipeA.relay"
+        type: "gpii.nexus.experiments.recipeA"
     },
     {
         componentA: "container.componentA1",
@@ -111,7 +111,7 @@ gpii.nexus.experiments.constructRecipe(
 gpii.nexus.experiments.constructRecipe(
     "container.recipeA2",
     {
-        type: "gpii.nexus.experiments.recipeA.relay"
+        type: "gpii.nexus.experiments.recipeA"
     },
     {
         componentA: "container.componentA2",
@@ -122,7 +122,7 @@ gpii.nexus.experiments.constructRecipe(
 gpii.nexus.experiments.constructRecipe(
     "container.recipeA3",
     {
-        type: "gpii.nexus.experiments.recipeA.relay"
+        type: "gpii.nexus.experiments.recipeA"
     },
     {
         componentA: "container.componentA1",
