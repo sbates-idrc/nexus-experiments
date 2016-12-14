@@ -25,9 +25,9 @@ fluid.defaults("gpii.nexus.experiments.gradeB", {
     }
 });
 
-// Recipe wiring grade
+// Recipe relay grade
 
-fluid.defaults("gpii.nexus.experiments.recipeA.wiring", {
+fluid.defaults("gpii.nexus.experiments.recipeA.relay", {
     gradeNames: "fluid.modelComponent",
     modelRelay: [
         {
@@ -46,7 +46,7 @@ fluid.construct("container", {
     type: "fluid.modelComponent"
 });
 
-// Add 2 of each peer grade
+// Add some peers
 
 fluid.construct("container.componentA1", {
     type: "gpii.nexus.experiments.gradeA"
@@ -70,49 +70,65 @@ fluid.construct("container.componentB2", {
     }
 });
 
-// Instance 1 of the recipe
-
-fluid.construct("container.recipeA1", {
-    type: "fluid.modelComponent"
+fluid.construct("container.componentB3", {
+    type: "gpii.nexus.experiments.gradeB",
+    members: {
+        name: "B3"
+    }
 });
 
-fluid.globalInstantiator.recordKnownComponent(
-    fluid.componentForPath("container.recipeA1"),
-    fluid.componentForPath("container.componentA1"),
-    "componentA",
-    false);
+// Make some recipe instances
 
-fluid.globalInstantiator.recordKnownComponent(
-    fluid.componentForPath("container.recipeA1"),
-    fluid.componentForPath("container.componentB1"),
-    "componentB",
-    false);
+gpii.nexus.experiments.constructRecipe = function (path, relayOptions, components, instantiator) {
+    instantiator = instantiator || fluid.globalInstantiator;
 
-fluid.construct("container.recipeA1.wiring", {
-    type: "gpii.nexus.experiments.recipeA.wiring"
-});
+    fluid.construct(path, {
+        type: "fluid.modelComponent"
+    }, instantiator);
 
-// Instance 2 of the recipe
+    fluid.each(components, function (componentPath, componentName) {
+        instantiator.recordKnownComponent(
+            fluid.componentForPath(path),
+            fluid.componentForPath(componentPath),
+            componentName,
+            false);
+    });
 
-fluid.construct("container.recipeA2", {
-    type: "fluid.modelComponent"
-});
+    fluid.construct(path + ".relay", relayOptions, instantiator);
+};
 
-fluid.globalInstantiator.recordKnownComponent(
-    fluid.componentForPath("container.recipeA2"),
-    fluid.componentForPath("container.componentA2"),
-    "componentA",
-    false);
+gpii.nexus.experiments.constructRecipe(
+    "container.recipeA1",
+    {
+        type: "gpii.nexus.experiments.recipeA.relay"
+    },
+    {
+        componentA: "container.componentA1",
+        componentB: "container.componentB1"
+    }
+);
 
-fluid.globalInstantiator.recordKnownComponent(
-    fluid.componentForPath("container.recipeA2"),
-    fluid.componentForPath("container.componentB2"),
-    "componentB",
-    false);
+gpii.nexus.experiments.constructRecipe(
+    "container.recipeA2",
+    {
+        type: "gpii.nexus.experiments.recipeA.relay"
+    },
+    {
+        componentA: "container.componentA2",
+        componentB: "container.componentB2"
+    }
+);
 
-fluid.construct("container.recipeA2.wiring", {
-    type: "gpii.nexus.experiments.recipeA.wiring"
-});
+gpii.nexus.experiments.constructRecipe(
+    "container.recipeA3",
+    {
+        type: "gpii.nexus.experiments.recipeA.relay"
+    },
+    {
+        componentA: "container.componentA1",
+        componentB: "container.componentB3"
+    }
+);
 
 // Exercise the model relay rules
 
@@ -120,5 +136,3 @@ fluid.componentForPath("container.componentA1").applier.change("valueA", 100);
 fluid.componentForPath("container.componentA2").applier.change("valueA", 200);
 fluid.componentForPath("container.componentA1").applier.change("valueA", 110);
 fluid.componentForPath("container.componentA2").applier.change("valueA", 220);
-
-// TODO: Test a component used in multiple recipes
