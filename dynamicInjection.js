@@ -29,6 +29,14 @@ fluid.defaults("gpii.nexus.experiments.gradeB", {
 
 fluid.defaults("gpii.nexus.experiments.recipeA", {
     gradeNames: "fluid.modelComponent",
+    componentPaths: {
+        componentA: null,
+        componentB: null
+    },
+    components: {
+        componentA: "@expand:fluid.componentForPath({recipeA}.options.componentPaths.componentA)",
+        componentB: "@expand:fluid.componentForPath({recipeA}.options.componentPaths.componentB)"
+    },
     modelRelay: [
         {
             source: "{componentA}.model.valueA",
@@ -79,56 +87,29 @@ fluid.construct("container.componentB3", {
 
 // Make some recipe instances
 
-gpii.nexus.experiments.constructRecipe = function (path, recipeOptions, components, instantiator) {
-    instantiator = instantiator || fluid.globalInstantiator;
-
-    fluid.construct(path, {
-        type: "fluid.modelComponent"
-    }, instantiator);
-
-    fluid.each(components, function (componentPath, componentName) {
-        instantiator.recordKnownComponent(
-            fluid.componentForPath(path),
-            fluid.componentForPath(componentPath),
-            componentName,
-            false);
-    });
-
-    fluid.construct(path + ".recipe", recipeOptions, instantiator);
-};
-
-gpii.nexus.experiments.constructRecipe(
-    "container.recipeA1",
-    {
-        type: "gpii.nexus.experiments.recipeA"
-    },
-    {
+fluid.construct("container.recipeA1", {
+    type: "gpii.nexus.experiments.recipeA",
+    componentPaths: {
         componentA: "container.componentA1",
         componentB: "container.componentB1"
     }
-);
+});
 
-gpii.nexus.experiments.constructRecipe(
-    "container.recipeA2",
-    {
-        type: "gpii.nexus.experiments.recipeA"
-    },
-    {
+fluid.construct("container.recipeA2", {
+    type: "gpii.nexus.experiments.recipeA",
+    componentPaths: {
         componentA: "container.componentA2",
         componentB: "container.componentB2"
     }
-);
+});
 
-gpii.nexus.experiments.constructRecipe(
-    "container.recipeA3",
-    {
-        type: "gpii.nexus.experiments.recipeA"
-    },
-    {
+fluid.construct("container.recipeA3", {
+    type: "gpii.nexus.experiments.recipeA",
+    componentPaths: {
         componentA: "container.componentA1",
         componentB: "container.componentB3"
     }
-);
+});
 
 // Exercise the model relay rules
 
